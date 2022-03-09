@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.mjs",
+  "proxy": "http://localhost:5000",
   "scripts": {
     "dev": "nodemon server.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
