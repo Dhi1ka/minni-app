@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Post from "../models/Post.mjs";
 
 export const getPosts = async (req, res) => {
@@ -25,8 +26,18 @@ export const createPost = async (req, res) => {
   }
 };
 
-export const editPost = (req, res) => {
-  res.send("edit Post");
+export const editPost = async (req, res) => {
+  const { id: _id } = req.params;
+  const post = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(_id))
+    return res.status(404).json({
+      message: `Post with id ${_id} not found!`,
+    });
+
+  const result = await Post.findByIdAndUpdate(_id, post, { new: true });
+
+  res.status(201).json(result);
 };
 
 export const deletePost = (req, res) => {

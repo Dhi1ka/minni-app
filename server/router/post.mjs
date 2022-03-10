@@ -13,6 +13,6 @@ postRouter.get("/", getPosts);
 postRouter.get("/detail/:id", getPostsById);
 postRouter.post("/create", createPost);
 postRouter.put("/edit/:id", editPost);
-postRouter.delete("/", deletePost);
+postRouter.delete("/delete/:id", deletePost);
 
 export default postRouter;
