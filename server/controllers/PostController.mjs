@@ -40,6 +40,29 @@ export const editPost = async (req, res) => {
   res.status(201).json(result);
 };
 
-export const deletePost = (req, res) => {
-  res.send("delete Post");
+export const deletePost = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).json({ message: `Post with id ${id} not found!` });
+
+  await Post.findByIdAndRemove(id);
+
+  res.status(200).json({ message: "Delete successfully!" });
+};
+
+export const likePost = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).json({ message: `Post with id ${id} not found!` });
+
+  const post = await Post.findById(id);
+  const resultLike = await Post.findByIdAndUpdate(
+    id,
+    { likeCount: post.likeCount + 1 },
+    { new: true },
+  );
+
+  res.status(200).json(resultLike);
 };
