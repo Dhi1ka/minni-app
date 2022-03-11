@@ -54,7 +54,6 @@ const Post = ({ post, setCurrentId }) => {
       </Typography>
       <CardContent>
         <Typography
-          className={classes.title}
           variant="body2"
           color="textSecondary"
           component="p"
@@ -69,16 +68,14 @@ const Post = ({ post, setCurrentId }) => {
           color="primary"
           onClick={() => dispatch(likePost(post._id))}
         >
-          <ThumbUpAltIcon fontSize="small" />
-          Like
+          <ThumbUpAltIcon fontSize="small" /> Like {post.likeCount}
         </Button>
         <Button
           size="small"
           color="primary"
           onClick={() => dispatch(deletePost(post._id))}
         >
-          <DeleteIcon fontSize="small" />
-          Delete
+          <DeleteIcon fontSize="small" /> Delete
         </Button>
       </CardActions>
     </Card>
