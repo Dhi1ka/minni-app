@@ -9,6 +9,8 @@ import {
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { GoogleLogin } from "react-google-login";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import Icon from "./icon";
 import useStyle from "./styles";
@@ -18,6 +20,8 @@ const Auth = () => {
   const classes = useStyle();
   const [showPassword, setShowPassword] = React.useState(false);
   const [isSignup, setIsSignup] = React.useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = () => {};
   const handleChange = () => {};
@@ -29,12 +33,21 @@ const Auth = () => {
     handleShowPassword(false);
   };
 
-  const googleSuccess = (res) => {
-    console.log(res);
+  const googleSuccess = async (res) => {
+    const result = res?.profileObj;
+    const token = res?.tokenId;
+
+    try {
+      dispatch({ type: "AUTH", data: { result, token } });
+
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const googleFailure = () => {
-    console.log("Google Sign In failure!");
+  const googleFailure = (error) => {
+    console.error(error);
   };
 
   return (
@@ -87,8 +100,17 @@ const Auth = () => {
               />
             )}
           </Grid>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+          >
+            {isSignup ? "Sign Up" : "Sign In"}
+          </Button>
           <GoogleLogin
-            clientId=""
+            clientId="226026808465-2l2q90mh8caqqtcf7ljlanaln6gfrf1s.apps.googleusercontent.com"
             render={(renderProps) => (
               <Button
                 className={classes.googleButton}
@@ -106,15 +128,6 @@ const Auth = () => {
             onFailure={googleFailure}
             cookiePolicy="single_host_origin"
           />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            {isSignup ? "Sign Up" : "Sign In"}
-          </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Button onClick={switchMode}>
