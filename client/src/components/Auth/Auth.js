@@ -15,22 +15,44 @@ import { useNavigate } from "react-router-dom";
 import Icon from "./icon";
 import useStyle from "./styles";
 import Input from "./Input";
+import { signup, signin } from "../../actions/auth";
+
+const initState = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 
 const Auth = () => {
   const classes = useStyle();
   const [showPassword, setShowPassword] = React.useState(false);
   const [isSignup, setIsSignup] = React.useState(false);
+  const [formData, setFormData] = React.useState(initState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleSubmit = () => {};
-  const handleChange = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (isSignup) {
+      dispatch(signup(formData, navigate));
+    } else {
+      dispatch(signin(formData, navigate));
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleShowPassword = () =>
     setShowPassword((prevShowPassword) => !prevShowPassword);
 
   const switchMode = () => {
     setIsSignup((prevIsSignup) => !prevIsSignup);
-    handleShowPassword(false);
+    setShowPassword(false);
   };
 
   const googleSuccess = async (res) => {
@@ -110,7 +132,7 @@ const Auth = () => {
             {isSignup ? "Sign Up" : "Sign In"}
           </Button>
           <GoogleLogin
-            clientId="226026808465-2l2q90mh8caqqtcf7ljlanaln6gfrf1s.apps.googleusercontent.com"
+            clientId={process.env.GOOGLE_CLIENT_ID}
             render={(renderProps) => (
               <Button
                 className={classes.googleButton}

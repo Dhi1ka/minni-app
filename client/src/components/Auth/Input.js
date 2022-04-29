@@ -23,7 +23,7 @@ const Input = ({
         label={label}
         autoFocus={autoFocus}
         type={type}
-        inputProps={
+        InputProps={
           name === "password"
             ? {
                 endAdornment: (
