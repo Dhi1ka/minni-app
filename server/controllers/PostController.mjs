@@ -11,7 +11,15 @@ export const getPosts = async (req, res) => {
   }
 };
 
-export const getPostsById = async (req, res) => {};
+export const getPostById = async (req, res) => {
+  try {
+    const postById = await Post.findById();
+
+    res.status(200).json(postById);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
 
 export const createPost = async (req, res) => {
   const newPost = req.body;
@@ -54,15 +62,22 @@ export const deletePost = async (req, res) => {
 export const likePost = async (req, res) => {
   const { id } = req.params;
 
+  if (!req.userId) return res.status(401).json({ message: "Unauthenticated!" });
+
   if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).json({ message: `Post with id ${id} not found!` });
 
   const post = await Post.findById(id);
-  const resultLike = await Post.findByIdAndUpdate(
-    id,
-    { likeCount: post.likeCount + 1 },
-    { new: true },
-  );
+
+  const index = post.likes.findIndex((id) => id === String(req.userId));
+
+  if (index === -1) {
+    post.likes.push(req.userId);
+  } else {
+    post.likes = post.likes.filter((id) => id !== String(req.userId));
+  }
+
+  const resultLike = await Post.findByIdAndUpdate(id, post, { new: true });
 
   res.status(200).json(resultLike);
 };
