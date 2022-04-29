@@ -13,7 +13,8 @@ export const getPosts = async (req, res) => {
 
 export const getPostById = async (req, res) => {
   try {
-    const postById = await Post.findById();
+    const { id } = req.params;
+    const postById = await Post.findOne({ _id: id });
 
     res.status(200).json(postById);
   } catch (error) {
