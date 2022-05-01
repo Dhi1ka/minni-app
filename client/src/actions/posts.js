@@ -1,11 +1,27 @@
 import * as api from "../api";
-import { CREATE, GET_ALL, UPDATE, DELETE } from "../constants/actionTypes";
+import {
+  CREATE,
+  GET_ALL,
+  GET_BY_ID,
+  UPDATE,
+  DELETE,
+} from "../constants/actionTypes";
 
 export const getPosts = () => async (dispatch) => {
   try {
     const { data } = await api.getAllPosts();
 
     dispatch({ type: GET_ALL, payload: data });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getPostById = (id) => async (dispatch) => {
+  try {
+    const { data } = await api.getPostById(id);
+
+    dispatch({ type: GET_BY_ID, payload: data });
   } catch (error) {
     console.error(error);
   }

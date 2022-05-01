@@ -2,6 +2,16 @@ import axios from "axios";
 
 const API = axios.create({ baseURL: "http://localhost:5000" });
 
+API.interceptors.request.use((req) => {
+  const profile = localStorage.getItem("profile");
+
+  if (profile) {
+    req.headers.Authorization = `Bearer ${JSON.parse(profile).token}`;
+  }
+
+  return req;
+});
+
 export const getAllPosts = () => API.get(`/posts`);
 export const getPostById = (id) => API.get(`/posts/detail/${id}`);
 export const createPost = (result) => API.post(`/posts/create`, result);
