@@ -23,9 +23,13 @@ export const getPostById = async (req, res) => {
 };
 
 export const createPost = async (req, res) => {
-  const newPost = req.body;
+  const { title, message, tags, selectedFile } = req.body;
+  // const newPost = req.body;
   const createdPost = new Post({
-    ...newPost,
+    title,
+    message,
+    tags,
+    selectedFile,
     author: req.userId,
     createdAt: new Date().toISOString(),
   });
