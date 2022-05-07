@@ -14,7 +14,7 @@ const Form = ({ currentId, setCurrentId }) => {
     selectedFile: "",
   });
   const post = useSelector((state) =>
-    currentId ? state.posts.find((p) => p._id === currentId) : null,
+    currentId ? state.posts.find((message) => message._id === currentId) : null,
   );
   const classes = useStyle();
   const dispatch = useDispatch();
@@ -27,11 +27,11 @@ const Form = ({ currentId, setCurrentId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (currentId === 0) {
-      dispatch(createPost({ ...postData, name: user?.result?.name }));
+    if (currentId) {
+      dispatch(editPost(currentId, { ...postData, name: user?.result?.name }));
       handleClear();
     } else {
-      dispatch(editPost(currentId, { ...postData, name: user?.result?.name }));
+      dispatch(createPost({ ...postData, name: user?.result?.name }));
       handleClear();
     }
   };
