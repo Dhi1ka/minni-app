@@ -1,8 +1,19 @@
-import { CREATE, GET_ALL, UPDATE, DELETE } from "../constants/actionTypes";
+import {
+  CREATE,
+  GET_ALL,
+  GET_BY_ID,
+  GET_BY_SEARCH,
+  UPDATE,
+  DELETE,
+} from "../constants/actionTypes";
 
 export default (posts = [], action) => {
   switch (action.type) {
     case GET_ALL:
+      return action.payload;
+    case GET_BY_ID:
+      return action.payload;
+    case GET_BY_SEARCH:
       return action.payload;
     case CREATE:
       return [...posts, action.payload];

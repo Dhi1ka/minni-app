@@ -1,6 +1,7 @@
 export const CREATE = "CREATE";
 export const GET_ALL = "GET_ALL";
 export const GET_BY_ID = "GET_BY_ID";
+export const GET_BY_SEARCH = "GET_BY_SEARCH";
 export const UPDATE = "UPDATE";
 export const DELETE = "DELETE";
 export const LIKE = "LIKE";

@@ -14,6 +14,12 @@ API.interceptors.request.use((req) => {
 
 export const getAllPosts = () => API.get(`/posts`);
 export const getPostById = (id) => API.get(`/posts/detail/${id}`);
+export const fetchPostsBySearch = (searchQuery) =>
+  API.get(
+    `/posts/search?searchQuery=${searchQuery.search || "none"}&tags=${
+      searchQuery.tags
+    }`,
+  );
 export const createPost = (result) => API.post(`/posts/create`, result);
 export const editPost = (id, result) => API.put(`/posts/edit/${id}`, result);
 export const likePost = (id) => API.put(`/posts/like/${id}`);

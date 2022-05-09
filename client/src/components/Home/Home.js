@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import ChipInput from "material-ui-chip-input";
 
-import { getPosts } from "../../actions/posts";
+import { getPosts, getPostsBySearch } from "../../actions/posts";
 import useStyles from "./styles";
 import Posts from "../Posts/Posts";
 import Form from "../Form/Form";
@@ -39,14 +39,25 @@ const Home = () => {
 
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
-      //
+      searchPost();
+    }
+  };
+
+  const searchPost = () => {
+    if (search.trim() || tags) {
+      dispatch(getPostsBySearch({ search, tags: tags.join(",") }));
+      navigate(
+        `/posts/search?searchQuery=${search || "none"}&tags=${tags.join(",")}`,
+      );
+    } else {
+      navigate("/");
     }
   };
 
   const handleAdd = (tag) => setTags([...tags, tag]);
 
-  const handleDelete = (tagToDelete) =>
-    setTags(tags.filter((tag) => tag !== tagToDelete));
+  const handleDelete = (tagToDoRemove) =>
+    setTags(tags.filter((tag) => tag !== tagToDoRemove));
 
   return (
     <Grow in>
@@ -84,6 +95,9 @@ const Home = () => {
                 label="Search Tags.."
                 variant="outlined"
               />
+              <Button onClick={searchPost} variant="contained" color="primary">
+                Search
+              </Button>
             </AppBar>
             <Form currentId={currentId} setCurrentId={setCurrentId} />
             <Paper className={classes.pagination} elevation={6}>

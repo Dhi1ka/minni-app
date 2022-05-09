@@ -3,6 +3,7 @@ import {
   CREATE,
   GET_ALL,
   GET_BY_ID,
+  GET_BY_SEARCH,
   UPDATE,
   DELETE,
 } from "../constants/actionTypes";
@@ -27,9 +28,23 @@ export const getPostById = (id) => async (dispatch) => {
   }
 };
 
+export const getPostsBySearch = (searchQuery) => async (dispatch) => {
+  try {
+    const {
+      data: { data },
+    } = await api.fetchPostsBySearch(searchQuery);
+
+    dispatch({ type: GET_BY_SEARCH, payload: data });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const createPost = (post) => async (dispatch) => {
   try {
-    const { data } = await api.createPost(post);
+    const {
+      data: { data },
+    } = await api.createPost(post);
 
     dispatch({ type: CREATE, payload: data });
   } catch (error) {
