@@ -12,7 +12,7 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-export const getAllPosts = () => API.get(`/posts`);
+export const getAllPosts = (page) => API.get(`/posts?page=${page}`);
 export const getPostById = (id) => API.get(`/posts/detail/${id}`);
 export const fetchPostsBySearch = (searchQuery) =>
   API.get(
