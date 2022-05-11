@@ -23,7 +23,7 @@ export default (state = { isLoading: true, posts: [] }, action) => {
         numberOfPages: action.payload.numberOfPages,
       };
     case GET_BY_ID:
-      return action.payload;
+      return { ...state, post: action.payload };
     case GET_BY_SEARCH:
       return { ...state, posts: action.payload };
     case CREATE:
