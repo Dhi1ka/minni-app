@@ -41,9 +41,10 @@ export const getPostsBySearch = async (req, res) => {
 };
 
 export const getPostById = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const { id } = req.params;
-    const postById = await Post.findOne({ _id: id });
+    const postById = await Post.findById(id);
 
     res.status(200).json(postById);
   } catch (error) {
