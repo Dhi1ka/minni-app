@@ -11,6 +11,7 @@ import moment from "moment";
 
 import { getPostById, getPostsBySearch } from "../../actions/posts";
 import useStyles from "./styles";
+import CommentSection from "./CommentSection";
 
 const PostDetails = () => {
   const { post, posts, isLoading } = useSelector((state) => state.posts);
@@ -67,12 +68,15 @@ const PostDetails = () => {
           <Typography variant="body1">
             {moment(post.createdAt).fromNow()}
           </Typography>
+          <CommentSection post={post} />
         </div>
         <div className={classes.imageSection}>
           <img
             className={classes.media}
             src={post.selectedFile}
             alt="imageFile"
+            width="250"
+            height="250"
           />
         </div>
       </div>

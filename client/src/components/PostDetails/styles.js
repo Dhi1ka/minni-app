@@ -32,4 +32,20 @@ export default makeStyles((theme) => ({
       flexDirection: "column",
     },
   },
+  loadingPaper: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "20px",
+    border: "1px",
+  },
+  commentsOuterContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  commentsInnerContainer: {
+    height: "200px",
+    overflowY: "auto",
+    marginRight: "30px",
+  },
 }));
