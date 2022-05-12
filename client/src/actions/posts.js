@@ -6,6 +6,8 @@ import {
   GET_BY_SEARCH,
   UPDATE,
   DELETE,
+  LIKE,
+  COMMENT,
   START_LOADING,
   END_LOADING,
 } from "../constants/actionTypes";
@@ -104,9 +106,21 @@ export const likePost = (id) => async (dispatch) => {
 
     const { data } = await api.likePost(id);
 
-    dispatch({ type: UPDATE, payload: data });
+    dispatch({ type: LIKE, payload: data });
 
     dispatch({ type: END_LOADING });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const commentPost = (value, id) => async (dispatch) => {
+  try {
+    const { data } = await api.commentPost(value, id);
+
+    dispatch({ type: COMMENT, payload: data });
+
+    return data.comments;
   } catch (error) {
     console.error(error);
   }

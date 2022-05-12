@@ -23,6 +23,8 @@ export const fetchPostsBySearch = (searchQuery) =>
 export const createPost = (result) => API.post(`/posts/create`, result);
 export const editPost = (id, result) => API.put(`/posts/edit/${id}`, result);
 export const likePost = (id) => API.put(`/posts/like/${id}`);
+export const commentPost = (value, id) =>
+  API.post(`/posts/comment/${id}`, { value });
 export const deletePost = (id) => API.delete(`/posts/delete/${id}`);
 
 export const signUp = (formData) => API.post(`users/signup`, formData);
