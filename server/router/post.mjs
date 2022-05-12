@@ -8,6 +8,7 @@ import {
   editPost,
   deletePost,
   likePost,
+  commentPost,
 } from "../controllers/PostController.mjs";
 import auth from "../middleware/auth.mjs";
 
@@ -20,5 +21,6 @@ postRouter.post("/create", auth, createPost);
 postRouter.put("/edit/:id", auth, editPost);
 postRouter.delete("/delete/:id", auth, deletePost);
 postRouter.put("/like/:id", auth, likePost);
+postRouter.post("/comment/:id", auth, commentPost);
 
 export default postRouter;
