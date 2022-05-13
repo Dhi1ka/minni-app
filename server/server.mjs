@@ -24,10 +24,13 @@ app.use("/", (req, res) => {
 const PORT = +process.env.PORT || 5000;
 
 mongoose
-  .connect(process.env.CONNECTION_URL_TEST, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    "mongodb://dhi1ka:m1nN1IzeAs@minni-test-shard-00-00.j85xu.mongodb.net:27017,minni-test-shard-00-01.j85xu.mongodb.net:27017,minni-test-shard-00-02.j85xu.mongodb.net:27017/minni-db?ssl=true&replicaSet=atlas-ormeyb-shard-0&authSource=admin&retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    },
+  )
   .then(() =>
     app.listen(PORT, () =>
       console.log(`Server listening on http://localhost:${PORT}`),
