@@ -9,6 +9,8 @@ router.get("/", (req, res) => {
 });
 
 import postRouter from "./post.mjs";
+import userRouter from "./user.mjs";
 router.use("/posts", postRouter);
+router.use("/users", userRouter);
 
 export default router;

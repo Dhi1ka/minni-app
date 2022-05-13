@@ -1,20 +1,26 @@
 import express from "express";
+
 import {
   getPosts,
-  getPostsById,
+  getPostsBySearch,
+  getPostById,
   createPost,
   editPost,
   deletePost,
   likePost,
+  commentPost,
 } from "../controllers/PostController.mjs";
+import auth from "../middleware/auth.mjs";
 
 const postRouter = express.Router();
 
 postRouter.get("/", getPosts);
-postRouter.get("/detail/:id", getPostsById);
-postRouter.post("/create", createPost);
-postRouter.put("/edit/:id", editPost);
-postRouter.delete("/delete/:id", deletePost);
-postRouter.put("/like/:id", likePost);
+postRouter.get("/search", getPostsBySearch);
+postRouter.get("/detail/:id", getPostById);
+postRouter.post("/create", auth, createPost);
+postRouter.put("/edit/:id", auth, editPost);
+postRouter.delete("/delete/:id", auth, deletePost);
+postRouter.put("/like/:id", auth, likePost);
+postRouter.post("/comment/:id", auth, commentPost);
 
 export default postRouter;

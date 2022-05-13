@@ -2,20 +2,67 @@ import mongoose from "mongoose";
 import Post from "../models/Post.mjs";
 
 export const getPosts = async (req, res) => {
-  try {
-    const posts = await Post.find();
+  const { page } = req.query;
 
-    res.status(200).json(posts);
+  try {
+    const LIMIT = 8;
+    const startIndex = (+page - 1) * LIMIT;
+    const total = await Post.countDocuments({});
+
+    const posts = await Post.find()
+      .sort({ _id: -1 })
+      .limit(LIMIT)
+      .skip(startIndex);
+
+    res.status(200).json({
+      data: posts,
+      currentPage: +page,
+      numberOfPages: Math.ceil(total / LIMIT),
+    });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
 
-export const getPostsById = async (req, res) => {};
+export const getPostsBySearch = async (req, res) => {
+  const { searchQuery, tags } = req.query;
+
+  try {
+    const title = new RegExp(searchQuery, "i");
+
+    const posts = await Post.find({
+      $or: [{ title }, { tags: { $in: tags.split(",") } }],
+    });
+
+    res.status(200).json({ data: posts });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const getPostById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const postById = await Post.findById(id);
+
+    res.status(200).json(postById);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
 
 export const createPost = async (req, res) => {
-  const newPost = req.body;
-  const createdPost = new Post(newPost);
+  const { title, message, tags, selectedFile } = req.body;
+  // const newPost = req.body;
+  const createdPost = new Post({
+    title,
+    message,
+    tags,
+    selectedFile,
+    author: req.userId,
+    createdAt: new Date().toISOString(),
+  });
 
   try {
     await createdPost.save();
@@ -54,15 +101,35 @@ export const deletePost = async (req, res) => {
 export const likePost = async (req, res) => {
   const { id } = req.params;
 
+  if (!req.userId) return res.status(401).json({ message: "Unauthenticated!" });
+
   if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(404).json({ message: `Post with id ${id} not found!` });
 
   const post = await Post.findById(id);
-  const resultLike = await Post.findByIdAndUpdate(
-    id,
-    { likeCount: post.likeCount + 1 },
-    { new: true },
-  );
+
+  const index = post.likes.findIndex((id) => id === String(req.userId));
+
+  if (index === -1) {
+    post.likes.push(req.userId);
+  } else {
+    post.likes = post.likes.filter((id) => id !== String(req.userId));
+  }
+
+  const resultLike = await Post.findByIdAndUpdate(id, post, { new: true });
 
   res.status(200).json(resultLike);
+};
+
+export const commentPost = async (req, res) => {
+  const { id } = req.params;
+  const { value } = req.body;
+
+  const post = await Post.findById(id);
+
+  post.comments.push(value);
+
+  const updatedPost = await Post.findByIdAndUpdate(id, post, { new: true });
+
+  res.status(201).json(updatedPost);
 };
