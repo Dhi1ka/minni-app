@@ -59,7 +59,7 @@ const PostDetails = () => {
             color="textSecondary"
             component="h2"
           >
-            {post.tags}
+            {post.tags.map((tag) => `#${tag}`)}
           </Typography>
           <Typography gutterBottom variant="body1" component="p">
             {post.message}

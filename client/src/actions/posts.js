@@ -102,13 +102,9 @@ export const deletePost = (id) => async (dispatch) => {
 
 export const likePost = (id) => async (dispatch) => {
   try {
-    dispatch({ type: START_LOADING });
-
     const { data } = await api.likePost(id);
 
     dispatch({ type: LIKE, payload: data });
-
-    dispatch({ type: END_LOADING });
   } catch (error) {
     console.error(error);
   }
