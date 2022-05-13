@@ -1,48 +1,31 @@
 import * as React from "react";
-import { Container, AppBar, Typography, Grow, Grid } from "@material-ui/core";
-import { useDispatch } from "react-redux";
+import { Container } from "@material-ui/core";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import Posts from "./components/Posts/Posts";
-import Form from "./components/Form/Form";
-import useStyles from "./styles";
-import { getPosts } from "./actions/posts";
+import Navbar from "./components/Navbar/Navbar";
+import Home from "./components/Home/Home";
+import Auth from "./components/Auth/Auth";
+import PostDetails from "./components/PostDetails/PostDetails";
 
 const App = () => {
-  const [currentId, setCurrentId] = React.useState(null);
-  const classes = useStyles();
-  const dispatch = useDispatch();
-
-  React.useEffect(() => {
-    dispatch(getPosts());
-  }, [dispatch]);
+  const user = JSON.parse(localStorage.getItem("profile"));
 
   return (
-    <Container maxWidth="lg">
-      <AppBar className={classes.appBar} position="static" color="inherit">
-        <Typography className={classes.heading} variant="h2" align="center">
-          Minni
-        </Typography>
-        {/* <img src="" alt="" /> */}
-      </AppBar>
-      <Grow in>
-        <Container>
-          <Grid
-            className={classes.mainContainer}
-            container
-            justifyContent="space-between"
-            alignItems="stretch"
-            spacing={3}
-          >
-            <Grid item xs={12} sm={7}>
-              <Posts setCurrentId={setCurrentId} />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Form currentId={currentId} setCurrentId={setCurrentId} />
-            </Grid>
-          </Grid>
-        </Container>
-      </Grow>
-    </Container>
+    <BrowserRouter>
+      <Container maxWidth="lg">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Navigate to="/posts" replace />} />
+          <Route path="/posts" element={<Home />} />
+          <Route path="/posts/search" element={<Home />} />
+          <Route path="/posts/:id" element={<PostDetails />} />
+          <Route
+            path="/auth"
+            element={!user ? <Auth /> : <Navigate to="/posts" />}
+          />
+        </Routes>
+      </Container>
+    </BrowserRouter>
   );
 };
 

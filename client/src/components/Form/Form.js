@@ -5,41 +5,42 @@ import { useDispatch, useSelector } from "react-redux";
 
 import useStyle from "./styles";
 import { createPost, editPost } from "../../actions/posts";
+import { useNavigate } from "react-router-dom";
 
 const Form = ({ currentId, setCurrentId }) => {
   const [postData, setPostData] = React.useState({
-    author: "",
     title: "",
     message: "",
     tags: "",
     selectedFile: "",
   });
   const post = useSelector((state) =>
-    currentId ? state.posts.find((p) => p._id === currentId) : null,
+    currentId ? state.posts.posts.find((p) => p._id === currentId) : null,
   );
   const classes = useStyle();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user = JSON.parse(localStorage.getItem("profile"));
 
   React.useEffect(() => {
     if (post) setPostData(post);
   }, [post]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (currentId) {
-      dispatch(editPost(currentId, postData));
+      dispatch(editPost(currentId, { ...postData, name: user?.result?.name }));
+      handleClear();
     } else {
-      dispatch(createPost(postData));
+      dispatch(createPost({ ...postData, name: user?.result?.name }, navigate));
+      handleClear();
     }
-
-    handleClear();
   };
 
   const handleClear = () => {
-    setCurrentId(null);
+    setCurrentId(0);
     setPostData({
-      author: "",
       title: "",
       message: "",
       tags: "",
@@ -47,8 +48,18 @@ const Form = ({ currentId, setCurrentId }) => {
     });
   };
 
+  if (!user?.result?.name) {
+    return (
+      <Paper className={classes.paper}>
+        <Typography variant="h6" align="center">
+          Please Sign In to create Posts.
+        </Typography>
+      </Paper>
+    );
+  }
+
   return (
-    <Paper className={classes.paper}>
+    <Paper className={classes.paper} elevation={6}>
       <form
         autoComplete="off"
         noValidate
@@ -58,14 +69,7 @@ const Form = ({ currentId, setCurrentId }) => {
         <Typography variant="h6">
           {currentId ? "Edit" : "Create"} Post
         </Typography>
-        <TextField
-          name="author"
-          variant="outlined"
-          label="Author"
-          fullWidth
-          value={postData.author}
-          onChange={(e) => setPostData({ ...postData, author: e.target.value })}
-        />
+
         <TextField
           name="title"
           variant="outlined"
