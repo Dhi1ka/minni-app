@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "https://minni-test.herokuapp.com/" });
+const API = axios.create({ baseURL: "https://api-minni-test.herokuapp.com" });
 
 API.interceptors.request.use((req) => {
   const profile = localStorage.getItem("profile");
